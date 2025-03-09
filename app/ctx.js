@@ -1,6 +1,7 @@
 import { useContext, createContext } from 'react';
 import { useStorageState } from '../useStorageState';
 
+
 const AuthContext = createContext({
   signIn: () => null,
   signOut: () => null,
