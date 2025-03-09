@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
+import { useSession } from '../ctx';
+import { useRouter } from 'expo-router';
 
-const db = SQLite.openDatabase('tasks.db');  //crea base de datos "tasks"
+const db = SQLite.openDatabaseSync('tasks.db');  //crea base de datos "tasks"
 
 const TaskListScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const { signOut } = useSession(); 
+  const router = useRouter();
 
   useEffect(() => {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT);'
+        'CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT);',
+        [],
+        () => console.log('Tabla creada con exito'),
+        (error) => console.log('Error al crer la tabla:', error)
       );
-    });
+    },
+    (error) => console.log('Error en la transaccion:', error)
+  );
     fetchTasks();
   }, []);
 
@@ -44,6 +53,11 @@ const TaskListScreen = () => {
     });
   };
 
+  const handleLogout = () => {
+    signOut();
+    router.replace('/login'); // Redirige al usuario a la pantalla de inicio de sesión
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Tareas</Text>
@@ -64,6 +78,7 @@ const TaskListScreen = () => {
           </View>
         )}
       />
+      <Button title='Cerrar Sesion' onPress={handleLogout}/>
     </View>
   );
 };

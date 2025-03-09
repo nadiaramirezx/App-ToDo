@@ -1,19 +1,20 @@
-import { View,Text, TextInput, Button, Alert, StatusBar } from 'react-native';
-import {useSession} from "../ctx"
+import { View,Text, TextInput, Button, Alert,StyleSheet} from 'react-native';
+import {useSession} from './ctx'
 import {useState} from 'react';
-import { router } from 'expo-router';
+import {useRouter } from 'expo-router';
 
-export default function SignIn (){
+export default function Login (){
    const {signIn} = useSession();
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
+   const router = useRouter();
 
    //manejo del inicio de sesion
    const handleLogin = () => {
       //validacion de credenciales
       if (email ===  'usuario@ejemplo.com' && password === 'password123'){
-         signIn('/');
-         router.replace('/');
+         signIn();
+         router.replace('/'); //redirige a la pantalla principal (index)
       } else{
          Alert.alert('Correo o contraseña incorrectos');
       }
@@ -41,26 +42,24 @@ export default function SignIn (){
       </View>
   );
 
-
-  const styles = StyleSheet.create({
-   container: {
-     flex: 1,
-     justifyContent: 'center',
-     padding: 16,
-   },
-   title: {
-     fontSize: 24,
-     marginBottom: 16,
-     textAlign: 'center',
-   },
-   input: {
-     height: 40,
-     borderColor: '#ccc',
-     borderWidth: 1,
-     marginBottom: 12,
-     paddingHorizontal: 8,
-   },
- });
-
-
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+});

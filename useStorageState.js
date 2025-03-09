@@ -44,10 +44,13 @@ export function useStorageState(key) {
       }
     } else {
       SecureStore.getItemAsync(key).then(value => {
-        setState(value);
+        if( state !== value) { //solo actualiza si el valor cambia
+          setState(value);
+
+        }
       });
     }
-  }, [key]);
+  }, [key, state]);
 
   const setValue = useCallback(
     (value) => {
